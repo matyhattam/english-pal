@@ -1,24 +1,3 @@
-.container {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  background-color: hsl(24 5.7% 82.9%);
-  border-right: 1px solid hsl(24 5.4% 63.9%);
-  height: 100vh;
-  width: 20vh;
-}
-
-.chat {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
 .chatheader {
   display: flex;
   height: 5vh;
@@ -62,4 +41,3 @@
   font-size: 0.875rem;
   outline: none;
 }
-
