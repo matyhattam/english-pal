@@ -1,7 +1,14 @@
-import { ReactNode } from 'react'
+require('dotenv').config();
+import { FormEvent, ReactNode, useState } from 'react';
 import { FiSidebar } from "react-icons/fi";
 import { IoArrowUpCircleOutline } from "react-icons/io5";
 import './Chat.css'
+import OpenAI from "openai";
+const apiKey = process.env.OPENAI_API_KEY;
+const openai = new OpenAI({
+  dangerouslyAllowBrowser: true,
+  apiKey: apiKey 
+});
 
 interface ChatProps {
   className?: string;
@@ -15,7 +22,8 @@ interface MessagesAreaProps {
   className?: string;
 }
 interface TextareaProps {
-  className?: string;
+  formClassName?: string;
+  textAreaClassName?: string;
 }
 
 export function Chat({ toggleSideBar, className }: ChatProps) {
@@ -29,10 +37,60 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
     return <div className={className}>
     </div>
   }
-  function Textarea({ className }: TextareaProps) {
-    return <textarea className={className} placeholder='Message English Pal'>
-    </textarea>
+
+  function Textarea({ formClassName, textAreaClassName }: TextareaProps) {
+    const [userMessage, setUserMessage] = useState<string>('');
+
+    function handleChange(e: ChangeEvent<HTMLTextAreaElement>): void {
+      setUserMessage(e.target.value);
+      console.log(e.target.value);
+    }
+
+    async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
+      e.preventDefault();
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are an english teacher" },
+          {
+            role: "user",
+            content: userMessage,
+          },
+        ],
+      });
+      setUserMessage('');
+      console.log(completion.choices[0].message)
+    }
+
+    return (
+      <form
+        className={formClassName}
+        onSubmit={handleSubmit}>
+        <textarea
+          className={textAreaClassName}
+          placeholder='Message English Pal'
+          onChange={handleChange}>
+        </textarea>
+        <button
+          type="submit"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0
+          }}>
+          <IoArrowUpCircleOutline
+            style={{
+              color: "hsl(25 5.3% 44.7%)",
+              fontSize: '3em'
+            }}
+          />
+        </button>
+      </form>
+    )
   }
+
+
 
   return (
     <div className={className}>
@@ -44,13 +102,10 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
           onClick={toggleSideBar} />
       </ChatHeader>
       <MessagesArea className='messagesarea'></MessagesArea>
-      <div className='messageinput'>
-        <Textarea className='textarea'></Textarea>
-        <IoArrowUpCircleOutline style={{
-          color: "hsl(25 5.3% 44.7%)",
-          fontSize: '2.5em'
-        }} />
-      </div>
+      <Textarea
+        formClassName="messageinput"
+        textAreaClassName="textarea"
+      ></Textarea>
     </div>
   )
 
