@@ -1,13 +1,13 @@
-require('dotenv').config();
 import { FormEvent, ReactNode, useState } from 'react';
 import { FiSidebar } from "react-icons/fi";
 import { IoArrowUpCircleOutline } from "react-icons/io5";
 import './Chat.css'
+
 import OpenAI from "openai";
-const apiKey = process.env.OPENAI_API_KEY;
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
-  apiKey: apiKey 
+  apiKey: OPENAI_API_KEY 
 });
 
 interface ChatProps {
@@ -43,7 +43,6 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
 
     function handleChange(e: ChangeEvent<HTMLTextAreaElement>): void {
       setUserMessage(e.target.value);
-      console.log(e.target.value);
     }
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
