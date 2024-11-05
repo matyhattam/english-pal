@@ -7,8 +7,8 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  background-color: hsl(24 5.7% 82.9%);
-  border-right: 1px solid hsl(24 5.4% 63.9%);
+  background-color: hsl(20 5.9% 90%);
+  border-right: 1px solid hsl(24 5.7% 82.9%);
   height: 100vh;
   width: 20vh;
 }
@@ -27,14 +27,15 @@
   align-items: center;
   padding: 0% 1% 0 1%;
   background-color: white;
-  border-bottom: 1px solid hsl(24 5.4% 63.9%);
+  border-bottom: 1px solid hsl(24 5.7% 82.9%);
 }
 
 .messagesarea {
   display: flex;
   height: 82vh;
-  width: 70%;
+  width: 80%;
   margin: auto;
+  font-size: 1.17rem;
 }
 
 .messageinput {
@@ -42,13 +43,13 @@
   flex-direction: row;
   align-items: center;
   margin: auto;
-  width: 70%;
+  width: 80%;
   height: 7vh;
   padding: 1% 1% 1% 1%;
   margin-bottom: 3%;
-  border: 1px solid hsl(24 5.4% 63.9%);
+  border: 1px solid hsl(24 5.7% 82.9%);
   border-radius: 0.375rem;
-  background-color: hsl(24 5.7% 82.9%);
+  background-color: hsl(20 5.9% 90%);
   
 }
 
