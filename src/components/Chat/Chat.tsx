@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useState } from 'react';
+import { FormEvent, ReactNode, useRef, useEffect, useState } from 'react';
 import { FiSidebar } from "react-icons/fi";
 import { IoArrowUpCircleOutline } from "react-icons/io5";
 import './Chat.css'
@@ -7,9 +7,16 @@ import OpenAI from "openai";
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
-  apiKey: OPENAI_API_KEY 
+  apiKey: OPENAI_API_KEY
 });
-
+let dummyMessages = [
+  { source: 'user', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+  { source: 'teacher', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+  { source: 'user', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+  { source: 'teacher', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+  { source: 'user', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+  { source: 'teacher', content: 'Magna enim excepteur mollit nostrud nisi voluptate ut do dolor quis et ea irure.' },
+]
 interface ChatProps {
   className?: string;
   toggleSideBar: () => void;
@@ -27,14 +34,34 @@ interface TextareaProps {
 }
 
 export function Chat({ toggleSideBar, className }: ChatProps) {
+  //const [messages, setMessages] = useState(dummyMessages);
+  const [messages, setMessages] = useState([]);
 
   function ChatHeader({ children, className }: ChatHeaderProps) {
     return <div className={className}>
       {children}
     </div>
   }
+
   function MessagesArea({ className }: MessagesAreaProps) {
-    return <div className={className}>
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, [messages]);
+
+    function ChatItem({ className, children }) {
+      return (
+        <div className={className}>{children}</div>
+      )
+    }
+
+    return <div className={className} ref={scrollRef}>
+      {messages.map(message => (
+        <ChatItem className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>{message.content}</ChatItem>
+      ))}
     </div>
   }
 
@@ -57,8 +84,10 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
           },
         ],
       });
+      setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
+      setMessages(messages => [...messages, { source: 'teacher', content: completion.choices[0].message.content }]);
       setUserMessage('');
-      console.log(completion.choices[0].message)
+      //console.log(completion.choices[0].message.content);
     }
 
     return (
@@ -94,11 +123,13 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
   return (
     <div className={className}>
       <ChatHeader className='chatheader'>
-        <FiSidebar style={{
-          color: "hsl(25 5.3% 44.7%)",
-          fontSize: '1.5em'
-        }}
-          onClick={toggleSideBar} />
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <FiSidebar style={{
+            color: "hsl(25 5.3% 44.7%)",
+            fontSize: '1.5em'
+          }}
+            onClick={toggleSideBar} />
+        </div>
       </ChatHeader>
       <MessagesArea className='messagesarea'></MessagesArea>
       <Textarea
