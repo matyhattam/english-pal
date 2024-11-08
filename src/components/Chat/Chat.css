@@ -24,7 +24,7 @@
 
 .useritem {
   border-radius: 0.5rem;
-  background-color: hsl(20 5.9% 90%);
+  background-color: hsl(60 4.8% 95.9%);
   max-width: 60%;
   align-self: self-end;
 }
@@ -44,7 +44,7 @@
   margin-bottom: 3%;
   border: 1px solid hsl(24 5.4% 63.9%);
   border-radius: 0.375rem;
-  background-color: hsl(60 9.1% 97.8%);
+  background-color: hsl(60 4.8% 95.9%);
 }
 
 .textarea {
