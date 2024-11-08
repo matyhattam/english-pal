@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { FiSidebar } from "react-icons/fi";
 import { Textarea } from './TextArea';
-import { MessageArea, dummyMessages } from './MessageArea'
+import { MessageArea } from './MessageArea'
 import './Chat.css'
 
 interface ChatProps {
@@ -13,10 +13,7 @@ interface ChatHeaderProps {
   className?: string;
 }
 
-export function Chat({ toggleSideBar, className }: ChatProps) {
-  //const [messages, setMessages] = useState(dummyMessages);
-  const [messages, setMessages] = useState([]);
-
+export function Chat({ toggleSideBar, className, currentConv, messages, setMessages }: ChatProps) {
   function ChatHeader({ children, className }: ChatHeaderProps) {
     return <div className={className}>
       {children}
@@ -34,7 +31,7 @@ export function Chat({ toggleSideBar, className }: ChatProps) {
             onClick={toggleSideBar} />
         </div>
       </ChatHeader>
-      <MessageArea className='messagesarea' messages={messages}></MessageArea>
+      <MessageArea className='messagesarea' currentConv={currentConv} messages={messages} setMessages={setMessages}></MessageArea>
       <Textarea
         formClassName="messageinput"
         textAreaClassName="textarea"
