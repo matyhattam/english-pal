@@ -1,8 +1,16 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, ReactNode } from 'react';
+import { Messages } from '../../App'
 import './Chat.css'
 
 interface MessagesAreaProps {
   className?: string;
+  messages: Messages[];
+
+}
+
+interface ChatItem {
+  className?: string;
+  children?: ReactNode;
 }
 
 export function MessageArea({ className, messages }: MessagesAreaProps) {
@@ -14,7 +22,7 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
     }
   }, [messages]);
 
-  function ChatItem({ className, children }) {
+  function ChatItem({ className, children }: ChatItem) {
     return (
       <div className={className}>{children}</div>
     )
@@ -22,7 +30,10 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
 
   return <div className={className} ref={scrollRef}>
     {messages.map(message => (
-      <ChatItem className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>{message.content}</ChatItem>
+      <ChatItem key={message.id}
+        className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>
+        {message.content}
+      </ChatItem>
     ))}
   </div>
 }
