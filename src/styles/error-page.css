@@ -1,0 +1,25 @@
+.error-page {
+  display: flex;
+  margin: auto;
+  margin-top: 25vh;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.error-page h1 {
+  font-size: 4rem;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.error-page p {
+  font-size: 1.5rem;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.error-page i {
+  font-size: 2.5rem;
+  color: hsl(24 5.4% 63.9%);
+}
