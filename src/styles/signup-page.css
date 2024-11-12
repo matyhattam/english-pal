@@ -1,4 +1,4 @@
-.login-page {
+.signup-page {
   display: flex;
   margin: auto;
   margin-top: 25vh;
@@ -8,12 +8,13 @@
   padding: 2rem;
 }
 
-.login-page h1 {
+.signup-page h1 {
+  margin: auto;
   font-size: 4rem;
   margin-bottom: 1rem;
 }
 
-.login-page p {
+.signup-page p {
   font-size: 1.5rem;
   color: hsl(24 5.4% 63.9%);
   margin: auto;
@@ -21,29 +22,30 @@
 
 }
 
-.login-page p.signup {
+.signup-page p.signup {
   font-size: 1.2rem;
   margin-bottom: 0;
 }
 
-.login-page form {
+.signup-page form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
 
-.login-page input {
+.signup-page input {
   padding: 0.5rem;
   font-size: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #ccc;
 }
 
-.login-page button {
+.signup-page button {
   padding: 0.5rem 1rem;
   font-size: 1.5rem;
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
+  background-color: hsl(24 5.4% 63.9%);
 }
