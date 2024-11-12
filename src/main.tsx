@@ -9,6 +9,7 @@ import ErrorPage from './routes/error-page.tsx';
 import LoginPage from './routes/login-page.tsx';
 import Wrapper from './wrapper.tsx';
 import App from './App.tsx';
+import SignupPage from './routes/signup-page.tsx';
 
 const router = createBrowserRouter([
 
@@ -22,10 +23,13 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
+    path: "/signup",
+    element: <SignupPage />,
+  },
+  {
     path: "/app",
     element: <App />,
   },
-
 ]);
 
 createRoot(document.getElementById('root')!).render(

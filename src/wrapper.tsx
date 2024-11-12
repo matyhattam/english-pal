@@ -15,17 +15,14 @@ export default function Wrapper() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === 'SIGNED_OUT') {
-          console.log(session);
           setSession(null)
           navigate('/login', { replace: true });
 
         } else if (session) {
-          console.log(session);
           setSession(session)
           navigate('/app', { replace: true });
 
         } else if (!session) {
-          console.log(session);
           setSession(null)
           navigate('/login', { replace: true });
         }
