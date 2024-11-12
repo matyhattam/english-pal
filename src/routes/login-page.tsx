@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       if (data.user.aud === 'authenticated') {
         console.log('authenticated');
-        return navigate("/");
+        return navigate("/app");
       }
 
     } else {
@@ -38,7 +38,7 @@ export default function LoginPage() {
         const { error } = await supabase
           .from('user')
           .insert({ email: emailButtonValue });
-        return navigate("/");
+        return navigate("/app");
       }
     }
   }
@@ -57,9 +57,7 @@ export default function LoginPage() {
           onChange={(e) => { setPasswordButtonValue(e.target.value) }} />
         <button type="submit"
           name='login'>Login</button>
-        <button type="submit"
-          className='signup-button'
-          name='signup'>Sign Up</button>
+        <p className='signup'>Don't have an account? <a href="/signup">Sign Up</a></p>
       </form>
     </div>
   );
