@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import { useNavigate } from "react-router-dom";
 import { SideBar } from './components/SideBar/SideBar'
 import { Chat } from './components/Chat/Chat'
@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
+export const sessionContext = createContext(null);
 
 export interface Messages {
   id: string;
@@ -31,8 +32,9 @@ export interface CurrentConv {
 function App() {
   const [showSideBar, setShowSideBar] = useState<boolean>(true)
   const [conversations, setConversations] = useState([]);
-  const [currentConv, setCurrentConv] = useState('');
+  const [currentConv, setCurrentConv] = useState(null);
   const [messages, setMessages] = useState<Messages>([]);
+  const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,8 @@ function App() {
 
       if (!data.session) {
         navigate("/login")
+      } else {
+        setSession(data.session)
       }
     }
     fetchSession();
@@ -77,21 +81,24 @@ function App() {
 
   return (
     <>
-      <div className='container'>
-        {showSideBar && (
-          <SideBar className='sidebar'
-            conversations={conversations}
+      <sessionContext.Provider value={session}>
+        <div className='container'>
+          {showSideBar && (
+            <SideBar className='sidebar'
+              conversations={conversations}
+              currentConv={currentConv}
+              setCurrentConv={setCurrentConv}
+              setMessages={setMessages}>
+            </SideBar>)}
+          <Chat className='chat'
+            toggleSideBar={toggleSideBar}
             currentConv={currentConv}
             setCurrentConv={setCurrentConv}
+            messages={messages}
             setMessages={setMessages}>
-          </SideBar>)}
-        <Chat className='chat'
-          toggleSideBar={toggleSideBar}
-          currentConv={currentConv}
-          messages={messages}
-          setMessages={setMessages}>
-        </Chat>
-      </div>
+          </Chat>
+        </div>
+      </sessionContext.Provider>
     </>
   )
 }
