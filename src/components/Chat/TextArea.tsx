@@ -1,8 +1,10 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useContext } from 'react';
 import { IoArrowUpCircleOutline } from "react-icons/io5";
+import { sessionContext } from '../../App';
 import './Chat.css'
 
 import OpenAI from "openai";
+import { createClient } from '@supabase/supabase-js';
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 const openai = new OpenAI({
@@ -10,16 +12,31 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY
 });
 
+const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
+const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
+const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
+
 interface TextareaProps {
   formClassName?: string;
   textAreaClassName?: string;
 }
 
-export function Textarea({ formClassName, textAreaClassName, setMessages }: TextareaProps) {
+export function Textarea({ formClassName, textAreaClassName, currentConv, setCurrentConv, setMessages }: TextareaProps) {
   const [userMessage, setUserMessage] = useState<string>('');
+  const session = useContext(sessionContext);
+  console.log(currentConv)
 
   function handleChange(e: ChangeEvent<HTMLTextAreaElement>): void {
     setUserMessage(e.target.value);
+  }
+
+  async function useGetUser() {
+    const { data, error } = await supabase
+      .from('user')
+      .select('id')
+      .eq('auth_id', session.user.id);
+
+    return data[0].id
   }
 
   async function useAskChatGpt(userMessage) {
@@ -42,9 +59,32 @@ export function Textarea({ formClassName, textAreaClassName, setMessages }: Text
 
     setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
     setMessages(messages => [...messages, { source: 'teacher', content: answer }]);
+
+    if (currentConv !== null) {
+      console.log('testtest')
+      await supabase.from('messages').insert({
+        conversations_id: currentConv.id,
+        source: 'user',
+        content: userMessage,
+      });
+      await supabase.from('messages').insert({
+        conversations_id: currentConv.id,
+        source: 'teacher',
+        content: answer,
+      });
+
+    } else {
+      const { data, error } = await supabase.from('conversations').insert({
+        name: userMessage,
+        user_id: await useGetUser(),
+      }).select();
+
+      setCurrentConv(data[0]);
+    }
+
     setUserMessage('');
   }
-  
+
   return (
     <form
       className={formClassName}

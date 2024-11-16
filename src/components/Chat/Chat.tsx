@@ -13,7 +13,7 @@ interface ChatHeaderProps {
   className?: string;
 }
 
-export function Chat({ toggleSideBar, className, currentConv, messages, setMessages }: ChatProps) {
+export function Chat({ toggleSideBar, className, currentConv, setCurrentConv, messages, setMessages }: ChatProps) {
   function ChatHeader({ children, className }: ChatHeaderProps) {
     return <div className={className}>
       {children}
@@ -31,10 +31,17 @@ export function Chat({ toggleSideBar, className, currentConv, messages, setMessa
             onClick={toggleSideBar} />
         </div>
       </ChatHeader>
-      <MessageArea className='messagesarea' currentConv={currentConv} messages={messages} setMessages={setMessages}></MessageArea>
+      <MessageArea
+        className='messagesarea'
+        currentConv={currentConv}
+        messages={messages}
+        setMessages={setMessages}>
+      </MessageArea>
       <Textarea
         formClassName="messageinput"
         textAreaClassName="textarea"
+        currentConv={currentConv}
+        setCurrentConv={setCurrentConv}
         setMessages={setMessages}
       ></Textarea>
     </div>
