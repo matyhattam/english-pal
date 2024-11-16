@@ -1,7 +1,7 @@
 import './../styles/login-page.css'
 import { createClient } from '@supabase/supabase-js';
 import { FormEvent, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
@@ -57,7 +57,7 @@ export default function LoginPage() {
           onChange={(e) => { setPasswordButtonValue(e.target.value) }} />
         <button type="submit"
           name='login'>Login</button>
-        <p className='signup'>Don't have an account? <a href="/signup">Sign Up</a></p>
+        <p className='signup'>Don't have an account? <Link to="/signup">Sign Up</Link></p>
       </form>
     </div>
   );

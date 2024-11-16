@@ -28,15 +28,15 @@ export default function SignupPage() {
         }
       }
     });
-
+    console.log(data);
     if (data.user.aud === 'authenticated') {
-      console.log('authenticated');
       const { error } = await supabase
         .from('user')
         .insert({
           first_name: firstNameButtonValue,
           last_name: lastNameButtonValue,
-          email: emailButtonValue
+          email: emailButtonValue,
+          auth_id: data.user.id,
         });
       return navigate("/app");
     }

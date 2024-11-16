@@ -7,15 +7,13 @@ import {
 import './index.css'
 import ErrorPage from './routes/error-page.tsx';
 import LoginPage from './routes/login-page.tsx';
-import Wrapper from './wrapper.tsx';
 import App from './App.tsx';
 import SignupPage from './routes/signup-page.tsx';
 
 const router = createBrowserRouter([
-
   {
     path: "/",
-    element: <Wrapper />,
+    element: <App />,
     errorElement: <ErrorPage />
   },
   {

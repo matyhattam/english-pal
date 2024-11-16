@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-
+import { useNavigate } from "react-router-dom";
 import { SideBar } from './components/SideBar/SideBar'
 import { Chat } from './components/Chat/Chat'
 import './App.css'
-
 import { createClient } from '@supabase/supabase-js';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
@@ -34,6 +33,18 @@ function App() {
   const [conversations, setConversations] = useState([]);
   const [currentConv, setCurrentConv] = useState('');
   const [messages, setMessages] = useState<Messages>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession()
+
+      if (!data.session) {
+        navigate("/login")
+      }
+    }
+    fetchSession();
+  }, []);
 
   useEffect(() => {
     const fetchConversations = async () => {
