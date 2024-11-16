@@ -1,21 +1,25 @@
+import { useContext } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Conversations, Messages, CurrentConv } from '../../App';
+import { Conversations, Messages } from '../../App';
 import './SideBar.css'
-
+import { sessionContext } from '../../App';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
+//const session = useContext(SessionContext);
 
 interface SideBarProps {
   className?: string;
   conversations: Conversations[];
   currentConv: Conversations[];
-  setCurrentConv: React.Dispatch<React.SetStateAction<CurrentConv>>;
+  setCurrentConv: React.Dispatch<React.SetStateAction<Conversations>>;
   setMessages: React.Dispatch<React.SetStateAction<Messages>>;
 }
 
 export function SideBar({ className, conversations, currentConv, setCurrentConv, setMessages }: SideBarProps) {
-  async function getMessages(conversation) {
+  const session = useContext(sessionContext);
+
+  async function getMessages(conversation: Conversations) {
     if (conversation.id != currentConv.id) {
       setCurrentConv(conversation);
       setMessages([]);
@@ -26,25 +30,34 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
           `id, 
           source, 
           content, conversations!inner(id)`)
-        .eq('conversations.id', conversation.id);
+        .eq('conversations.id', conversation.id)
+        .eq('conversations.user_id', session.user.user.id)
 
       data.map(fetchedMessage => {
         setMessages(messages => {
           if (!messages.some(message => message.id === fetchedMessage.id)) {
             return [...messages, fetchedMessage];
           }
-
           return messages;
         })
       });
     }
   };
 
-  return <div className={className}>
-    {conversations.map(conversation =>
-      <div key={conversation.id}
-        className='sidebaritem'
-        onClick={() => { getMessages(conversation) }}
-      >{conversation.name}</div>)}
-  </div>
+  function Profile() {
+    return (
+      <div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={className}>
+      {conversations.map(conversation =>
+        <div key={conversation.id}
+          className='sidebaritem'
+          onClick={() => { getMessages(conversation) }}>{conversation.name}
+        </div>)}
+    </div>
+  )
 }
