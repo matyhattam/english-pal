@@ -31,7 +31,8 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
           content,
           conversations!inner(id)`)
       .eq('conversation_id', conversation.id)
-      .eq('conversations.user_id', await useGetUser(session));
+      .eq('conversations.user_id', await useGetUser(session))
+      .order('created_at', { ascending: true });
 
     data.map(fetchedMessage => {
       setMessages(messages => {
