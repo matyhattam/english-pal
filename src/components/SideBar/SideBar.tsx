@@ -6,7 +6,6 @@ import { sessionContext } from '../../App';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
-//const session = useContext(SessionContext);
 
 interface SideBarProps {
   className?: string;
@@ -20,10 +19,7 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
   const session = useContext(sessionContext);
 
   async function getMessages(conversation: Conversations) {
-
-
     setCurrentConv(conversation);
-
     setMessages([]);
 
     const { data, error } = await supabase
@@ -43,13 +39,6 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
       })
     });
   };
-
-  function Profile() {
-    return (
-      <div>
-      </div>
-    )
-  }
 
   return (
     <div className={className}>
