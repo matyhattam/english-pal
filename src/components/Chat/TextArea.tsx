@@ -46,16 +46,6 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
 
       useAddMessage(data[0].id, 'user', userMessage);
       useAddMessage(data[0].id, 'teacher', answer);
-      //await supabase.from('messages').insert({
-      //  conversation_id: data[0].id,
-      //  source: 'user',
-      //  content: userMessage,
-      //});
-      //await supabase.from('messages').insert({
-      //  conversation_id: data[0].id,
-      //  source: 'teacher',
-      //  content: answer,
-      //});
     }
 
     setUserMessage('');
