@@ -92,6 +92,7 @@ function App() {
             </SideBar>)}
           <Chat className='chat'
             toggleSideBar={toggleSideBar}
+            setConversations={setConversations}
             currentConv={currentConv}
             setCurrentConv={setCurrentConv}
             messages={messages}

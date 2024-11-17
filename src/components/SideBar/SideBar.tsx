@@ -20,28 +20,28 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
   const session = useContext(sessionContext);
 
   async function getMessages(conversation: Conversations) {
-    if (conversation.id != currentConv.id) {
-      setCurrentConv(conversation);
-      setMessages([]);
 
-      const { data, error } = await supabase
-        .from('messages')
-        .select(
-          `id, 
+
+    setCurrentConv(conversation);
+
+    setMessages([]);
+
+    const { data, error } = await supabase
+      .from('messages')
+      .select(
+        `id, 
           source, 
-          content, conversations!inner(id)`)
-        .eq('conversations.id', conversation.id)
-        .eq('conversations.user_id', session.user.user.id)
+          content`)
+      .eq('conversation_id', conversation.id)
 
-      data.map(fetchedMessage => {
-        setMessages(messages => {
-          if (!messages.some(message => message.id === fetchedMessage.id)) {
-            return [...messages, fetchedMessage];
-          }
-          return messages;
-        })
-      });
-    }
+    data.map(fetchedMessage => {
+      setMessages(messages => {
+        if (!messages.some(message => message.id === fetchedMessage.id)) {
+          return [...messages, fetchedMessage];
+        }
+        return messages;
+      })
+    });
   };
 
   function Profile() {
@@ -55,7 +55,7 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
     <div className={className}>
       {conversations.map(conversation =>
         <div key={conversation.id}
-          className='sidebaritem'
+          className={currentConv ? currentConv.id === conversation.id ? 'sidebaritem selected' : 'sidebaritem' : 'sidebaritem'}
           onClick={() => { getMessages(conversation) }}>{conversation.name}
         </div>)}
     </div>

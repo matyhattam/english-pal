@@ -21,10 +21,9 @@ interface TextareaProps {
   textAreaClassName?: string;
 }
 
-export function Textarea({ formClassName, textAreaClassName, currentConv, setCurrentConv, setMessages }: TextareaProps) {
+export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages }: TextareaProps) {
   const [userMessage, setUserMessage] = useState<string>('');
   const session = useContext(sessionContext);
-  console.log(currentConv)
 
   function handleChange(e: ChangeEvent<HTMLTextAreaElement>): void {
     setUserMessage(e.target.value);
@@ -39,11 +38,11 @@ export function Textarea({ formClassName, textAreaClassName, currentConv, setCur
     return data[0].id
   }
 
-  async function useAskChatGpt(userMessage) {
+  async function useAskChatGpt(userMessage, context) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are an english teacher" },
+        { role: "system", content: context },
         {
           role: "user",
           content: userMessage,
@@ -55,31 +54,43 @@ export function Textarea({ formClassName, textAreaClassName, currentConv, setCur
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
-    const answer = await useAskChatGpt(userMessage);
+    const answer = await useAskChatGpt(userMessage, "you are an english teacher");
 
     setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
     setMessages(messages => [...messages, { source: 'teacher', content: answer }]);
 
     if (currentConv !== null) {
-      console.log('testtest')
       await supabase.from('messages').insert({
-        conversations_id: currentConv.id,
+        conversation_id: currentConv.id,
         source: 'user',
         content: userMessage,
       });
       await supabase.from('messages').insert({
-        conversations_id: currentConv.id,
+        conversation_id: currentConv.id,
         source: 'teacher',
         content: answer,
       });
 
     } else {
       const { data, error } = await supabase.from('conversations').insert({
-        name: userMessage,
+        name: await useAskChatGpt(userMessage, "make a short title for this conversation out of the message sent by the user, without quotation marks"),
         user_id: await useGetUser(),
       }).select();
 
-      setCurrentConv(data[0]);
+      setCurrentConv(data);
+      setConversations(conversations => [data[0], ...conversations]);
+
+      console.log(data[0])
+      await supabase.from('messages').insert({
+        conversation_id: data[0].id,
+        source: 'user',
+        content: userMessage,
+      });
+      await supabase.from('messages').insert({
+        conversation_id: data[0].id,
+        source: 'teacher',
+        content: answer,
+      });
     }
 
     setUserMessage('');
