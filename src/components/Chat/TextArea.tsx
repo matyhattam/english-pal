@@ -23,17 +23,26 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
     setUserMessage(e.target.value);
   }
 
+  async function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>): void {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      setUserMessage('');
+      await handleSubmit(e);
+    }
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
+    setUserMessage('');
     setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
 
     const answer = await useChatGpt(userMessage, "you are an english teacher");
     setMessages(messages => [...messages, { source: 'teacher', content: answer }]);
 
     if (currentConv !== null) {
-      useAddMessage(currentConv.id, 'user', userMessage);
-      useAddMessage(currentConv.id, 'teacher', answer);
+      await useAddMessage(currentConv.id, 'user', userMessage);
+      await useAddMessage(currentConv.id, 'teacher', answer);
 
     } else {
       const { data, error } = await supabase.from('conversations').insert({
@@ -44,11 +53,9 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
       setCurrentConv(data);
       setConversations(conversations => [data[0], ...conversations]);
 
-      useAddMessage(data[0].id, 'user', userMessage);
-      useAddMessage(data[0].id, 'teacher', answer);
+      await useAddMessage(data[0].id, 'user', userMessage);
+      await useAddMessage(data[0].id, 'teacher', answer);
     }
-
-    setUserMessage('');
   }
 
   return (
@@ -59,7 +66,9 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
         className={textAreaClassName}
         placeholder='Message English Pal'
         value={userMessage}
-        onChange={handleChange}>
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      >
       </textarea>
       <button
         type="submit"
