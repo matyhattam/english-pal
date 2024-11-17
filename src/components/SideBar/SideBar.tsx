@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Conversations, Messages } from '../../App';
 import './SideBar.css'
 import { sessionContext } from '../../App';
+import { useGetUser } from '../../hooks/hooks';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
@@ -27,8 +28,10 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
       .select(
         `id, 
           source, 
-          content`)
+          content,
+          conversations!inner(id)`)
       .eq('conversation_id', conversation.id)
+      .eq('conversations.user_id', await useGetUser(session));
 
     data.map(fetchedMessage => {
       setMessages(messages => {

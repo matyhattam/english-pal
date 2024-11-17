@@ -2,6 +2,7 @@ import { useState, useEffect, createContext } from 'react'
 import { useNavigate } from "react-router-dom";
 import { SideBar } from './components/SideBar/SideBar'
 import { Chat } from './components/Chat/Chat'
+import { useGetUser } from './hooks/hooks';
 import './App.css'
 import { createClient } from '@supabase/supabase-js';
 const VITE_SUPABASE_PROJECT_URL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
@@ -51,32 +52,32 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const fetchConversations = async () => {
-      const { data, error } = await supabase
-        .from('conversations')
-        .select(
-          `id,
+    if (session) {
+      const fetchConversations = async () => {
+        const { data, error } = await supabase
+          .from('conversations')
+          .select(
+            `id,
           name,
-          created_at`)
-        .order('created_at', { ascending: false });
+          created_at, user!inner(id)`)
+          .eq('user.auth_id', session.user.id)
+          .order('created_at', { ascending: false });
 
-      data.map(fetchedConversation => {
-        setConversations(conversations => {
-          if (!conversations.some(conversation => conversation.id === fetchedConversation.id)) {
-            return [...conversations, fetchedConversation];
-          }
-          return conversations;
-        })
-      });
-    };
-
-    fetchConversations();
-  }, []);
-
+        data.map(fetchedConversation => {
+          setConversations(conversations => {
+            if (!conversations.some(conversation => conversation.id === fetchedConversation.id)) {
+              return [...conversations, fetchedConversation];
+            }
+            return conversations;
+          })
+        });
+      };
+      fetchConversations();
+    }
+  }, [session]);
 
   function toggleSideBar() {
     setShowSideBar(!showSideBar);
-    console.log(showSideBar)
   };
 
   return (
