@@ -29,8 +29,14 @@
 
 .teacheritem {
   align-self: self-start;
-
   max-width: 80%;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(24 5.7% 82.9%);
+}
+
+.textcontainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .messageinput {
