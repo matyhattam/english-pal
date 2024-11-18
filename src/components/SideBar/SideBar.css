@@ -1,6 +1,6 @@
 .sidebaritem {
   padding: 6% 6%;
-  margin: 2% 2% 2% 2%;
+  margin: 2% 2%;
   /* Prevent the text from wrapping to the next line */
   white-space: nowrap;
   overflow: hidden;
@@ -10,4 +10,25 @@
 .selected {
   border-radius: 0.5rem;
   background-color: hsl(20 5.9% 90%);
+}
+
+.searchbar {
+  padding: 5%;
+  margin: 5% 6% 5% 6%;
+  width: 74%;
+  border: 1px solid hsl(20 5.9% 90%);
+  border-radius: 0.5rem;
+  /* Prevent the text from wrapping to the next line */
+  white-space: nowrap;
+  overflow: hidden;
+  background-color: hsl(60 4.8% 95.9%);
+}
+
+.input {
+  border: none;
+  width: 80%;
+  padding-left: 5%;
+  outline: none;
+  background-color: transparent;
+  font-size: 1rem;
 }
