@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { FiSidebar } from "react-icons/fi";
+import { FiSidebar, FiPlusSquare } from "react-icons/fi";
 import { Textarea } from './TextArea';
 import { MessageArea } from './MessageArea'
 import './Chat.css'
@@ -23,13 +23,20 @@ export function Chat({ toggleSideBar, className, setConversations, currentConv, 
   return (
     <div className={className}>
       <ChatHeader className='chatheader'>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <FiSidebar style={{
-            color: "hsl(25 5.3% 44.7%)",
-            fontSize: '1.5em'
+        <FiSidebar style={{
+          color: "hsl(25 5.3% 44.7%)",
+          fontSize: '1.5em'
+        }}
+          onClick={toggleSideBar} />
+        <FiPlusSquare style={{
+          color: "hsl(25 5.3% 44.7%)",
+          fontSize: '1.5em'
+        }}
+          onClick={() => {
+            setCurrentConv(null);
+            setMessages([])
           }}
-            onClick={toggleSideBar} />
-        </div>
+        />
       </ChatHeader>
       <MessageArea
         className='messagesarea'
