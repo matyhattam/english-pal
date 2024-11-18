@@ -13,7 +13,7 @@ interface ChatItem {
   children?: ReactNode;
 }
 
-export function MessageArea({ className, messages }: MessagesAreaProps) {
+export function MessageArea({ className, messages, isLoading }: MessagesAreaProps) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
     {messages.map(message => (
       <ChatItem key={message.id}
         className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>
-        {message.content}
+        {isLoading ? <div className="spinner">🔄 Loading...</div> : message.content}
       </ChatItem>
     ))}
   </div>

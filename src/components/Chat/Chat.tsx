@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { FiSidebar, FiPlusSquare } from "react-icons/fi";
 import { Textarea } from './TextArea';
 import { MessageArea } from './MessageArea'
@@ -14,6 +14,8 @@ interface ChatHeaderProps {
 }
 
 export function Chat({ toggleSideBar, className, setConversations, currentConv, setCurrentConv, messages, setMessages }: ChatProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   function ChatHeader({ children, className }: ChatHeaderProps) {
     return <div className={className}>
       {children}
@@ -42,7 +44,8 @@ export function Chat({ toggleSideBar, className, setConversations, currentConv, 
         className='messagesarea'
         currentConv={currentConv}
         messages={messages}
-        setMessages={setMessages}>
+        setMessages={setMessages}
+        isLoading={isLoading}>
       </MessageArea>
       <Textarea
         formClassName="messageinput"
@@ -51,7 +54,8 @@ export function Chat({ toggleSideBar, className, setConversations, currentConv, 
         currentConv={currentConv}
         setCurrentConv={setCurrentConv}
         setMessages={setMessages}
-      ></Textarea>
+        setIsLoading={setIsLoading}>
+      </Textarea>
     </div>
   )
 

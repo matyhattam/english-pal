@@ -15,7 +15,7 @@ interface TextareaProps {
   textAreaClassName?: string;
 }
 
-export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages }: TextareaProps) {
+export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages, setIsLoading }: TextareaProps) {
   const [userMessage, setUserMessage] = useState<string>('');
   const session = useContext(sessionContext);
 
@@ -37,8 +37,10 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
     setUserMessage('');
     setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
 
+    setIsLoading(true);
     const answer = await useChatGpt(userMessage, "you are an english teacher");
     setMessages(messages => [...messages, { source: 'teacher', content: answer }]);
+    setIsLoading(false);
 
     if (currentConv !== null) {
       await useAddMessage(currentConv.id, 'user', userMessage);
@@ -59,32 +61,35 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
   }
 
   return (
-    <form
-      className={formClassName}
-      onSubmit={handleSubmit}>
-      <textarea
-        className={textAreaClassName}
-        placeholder='Message English Pal'
-        value={userMessage}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-      >
-      </textarea>
-      <button
-        type="submit"
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 0
-        }}>
-        <IoArrowUpCircleOutline
+    <div className='textcontainer'>
+      <form
+        className={formClassName}
+        onSubmit={handleSubmit}>
+        <textarea
+          className={textAreaClassName}
+          placeholder='Message English Pal'
+          value={userMessage}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        >
+        </textarea>
+        <button
+          type="submit"
           style={{
-            color: "hsl(25 5.3% 44.7%)",
-            fontSize: '3em'
-          }}
-        />
-      </button>
-    </form>
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0
+          }}>
+          <IoArrowUpCircleOutline
+            style={{
+              color: "hsl(25 5.3% 44.7%)",
+              fontSize: '3em'
+            }}
+          />
+        </button>
+      </form>
+    </div>
+
   )
 }
