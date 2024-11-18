@@ -1,4 +1,6 @@
 import { useRef, useEffect, ReactNode } from 'react';
+import ReactMakrdown from 'react-markdown';
+import gfm from 'remark-gfm';
 import { Messages } from '../../App'
 import './Chat.css'
 
@@ -32,7 +34,10 @@ export function MessageArea({ className, messages, isLoading }: MessagesAreaProp
     {messages.map(message => (
       <ChatItem key={message.id}
         className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>
-        {isLoading ? <div className="spinner">🔄 Loading...</div> : message.content}
+        {isLoading ?
+          <div className="spinner">🔄 Loading...</div>
+          : <ReactMakrdown children={message.content} remarkPlugins={[gfm]} />
+        }
       </ChatItem>
     ))}
   </div>

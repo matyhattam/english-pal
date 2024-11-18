@@ -20,6 +20,24 @@
   margin: 2% 2% 2% 2%;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1%;
+  text-align: left;
+}
+
+table th {
+  font-weight: bold;
+}
+
 .useritem {
   border-radius: 0.5rem;
   background-color: hsl(60 4.8% 95.9%);
@@ -32,6 +50,27 @@
   max-width: 80%;
   border-radius: 0.5rem;
   border: 1px solid hsl(24 5.7% 82.9%);
+}
+
+/* Reset default browser styles for Markdown elements */
+/*h1,*/
+/*h2,*/
+/*h3,*/
+/*h4,*/
+/*h5,*/
+/*h6,*/
+p,
+/*ul,*/
+/*ol,*/
+/*li,*/
+blockquote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  list-style: none;
+  text-align: inherit;
 }
 
 .textcontainer {
