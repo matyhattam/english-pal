@@ -1,3 +1,7 @@
+.sidebarlist {
+  overflow-y: auto;
+}
+
 .sidebaritem {
   padding: 6% 6%;
   margin: 2% 2%;

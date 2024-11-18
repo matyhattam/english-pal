@@ -64,12 +64,14 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
           onChange={handleChange}
         />
       </div>
-      {conversations.filter((item: Conversations) => item.name.toLowerCase().includes(search.toLowerCase()))
-        .map(conversation =>
-          <div key={conversation.id}
-            className={currentConv ? currentConv.id === conversation.id ? 'sidebaritem selected' : 'sidebaritem' : 'sidebaritem'}
-            onClick={() => { getMessages(conversation) }}>{conversation.name}
-          </div>)}
+      <div className='sidebarlist'>
+        {conversations.filter((item: Conversations) => item.name.toLowerCase().includes(search.toLowerCase()))
+          .map(conversation =>
+            <div key={conversation.id}
+              className={currentConv ? currentConv.id === conversation.id ? 'sidebaritem selected' : 'sidebaritem' : 'sidebaritem'}
+              onClick={() => { getMessages(conversation) }}>{conversation.name}
+            </div>)}
+      </div>
     </div>
   )
 }
