@@ -59,7 +59,7 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
         />
         <input className='input'
           type="text"
-          placeholder='Search'
+          //placeholder='Search'
           value={search}
           onChange={handleChange}
         />
