@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, ReactNode } from 'react';
 import ReactMakrdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import { ScaleLoader } from 'react-spinners';
 import { Messages } from '../../App'
 import { useChatGpt } from '../../hooks/hooks';
 import './Chat.css'
@@ -17,11 +18,12 @@ interface ChatItem {
   message: Messages;
 }
 
-export function MessageArea({ className, messages, isLoading }: MessagesAreaProps) {
+export function MessageArea({ className, messages }: MessagesAreaProps) {
   const scrollRef = useRef(null);
   const [correction, setCorrection] = useState([]);
   const [showCorrection, setShowCorrection] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [isCorrecting, setIsCorrecting] = useState<boolean>(false);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -31,27 +33,49 @@ export function MessageArea({ className, messages, isLoading }: MessagesAreaProp
 
   async function clickShowCorrection(message) {
     if (message.id !== correction.id) {
+      setIsCorrecting(true);
       setShowCorrection(!showCorrection)
       setSelectedMessageId(message.id)
 
       const correction = await useChatGpt(message.content,
         "you are an english teacher, correct my sentenance with good and simple english related to the topic of the current discussion");
+      setIsCorrecting(false);
       setCorrection({ id: message.id, content: correction });
+    } else {
+      setShowCorrection(!showCorrection)
     }
   }
 
   function ChatItem({ className, children, message }: ChatItem) {
+    const isCurrentMessage = selectedMessageId === message.id;
     if (message.source === 'user') {
-      return (
-        <div className={className} onClick={() => clickShowCorrection(message)}>{children}</div>
-      )
+      if (isCurrentMessage && isCorrecting) {
+        return (
+          <div
+            className={className} >
+            <ScaleLoader color="hsl(25 5.3% 44.7%)" />
+          </div>
+        )
+      } else {
+        return (
+          <div
+            className={className}
+            onClick={() => clickShowCorrection(message)}>
+            {children}
+          </div>
+        )
+      }
     } else {
       return (
-        <div className={className} >{children}</div>
+        <div
+          className={className} >
+          {children}
+        </div>
       )
     }
 
   }
+
 
   return (
     <div className={className} ref={scrollRef}>

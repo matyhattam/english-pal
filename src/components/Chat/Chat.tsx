@@ -44,8 +44,7 @@ export function Chat({ toggleSideBar, className, setConversations, currentConv, 
         className='messagesarea'
         currentConv={currentConv}
         messages={messages}
-        setMessages={setMessages}
-        isLoading={isLoading}>
+        setMessages={setMessages}>
       </MessageArea>
       <Textarea
         formClassName="messageinput"
