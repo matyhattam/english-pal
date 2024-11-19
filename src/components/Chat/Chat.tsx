@@ -54,6 +54,7 @@ export function Chat({ toggleSideBar, className, setConversations, currentConv, 
         currentConv={currentConv}
         setCurrentConv={setCurrentConv}
         setMessages={setMessages}
+        isLoading={isLoading}
         setIsLoading={setIsLoading}>
       </Textarea>
     </div>

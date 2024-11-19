@@ -1,4 +1,4 @@
-import { useRef, useEffect, ReactNode } from 'react';
+import { useRef, useEffect, useState, ReactNode } from 'react';
 import ReactMakrdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import { Messages } from '../../App'
@@ -13,10 +13,14 @@ interface MessagesAreaProps {
 interface ChatItem {
   className?: string;
   children?: ReactNode;
+  message: Messages;
 }
 
 export function MessageArea({ className, messages, isLoading }: MessagesAreaProps) {
   const scrollRef = useRef(null);
+  const [correction, setCorrection] = useState('');
+  const [showCorrection, setShowCorrection] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -24,21 +28,40 @@ export function MessageArea({ className, messages, isLoading }: MessagesAreaProp
     }
   }, [messages]);
 
-  function ChatItem({ className, children }: ChatItem) {
-    return (
-      <div className={className}>{children}</div>
-    )
+  function clickShowCorrection(message) {
+    setShowCorrection(!showCorrection)
+    setSelectedMessageId(message.id)
+    setCorrection("test correction display");
   }
 
-  return <div className={className} ref={scrollRef}>
-    {messages.map(message => (
-      <ChatItem key={message.id}
-        className={`chatitem ${message.source === 'user' ? 'useritem' : 'teacheritem'}`}>
-        {isLoading ?
-          <div className="spinner">🔄 Loading...</div>
-          : <ReactMakrdown children={message.content} remarkPlugins={[gfm]} />
-        }
-      </ChatItem>
-    ))}
-  </div>
+  function ChatItem({ className, children, message }: ChatItem) {
+    if (message.source === 'user') {
+      return (
+        <div className={className} onClick={() => clickShowCorrection(message)}>{children}</div>
+      )
+    } else {
+      return (
+        <div className={className} >{children}</div>
+      )
+    }
+
+  }
+
+  return (
+    <div className={className} ref={scrollRef}>
+      {messages.map(message => {
+        const displayCorrection = selectedMessageId === message.id
+        return (
+          <ChatItem key={message.id}
+            message={message}
+            className={`chatitem ${message.source === 'user' ?
+              'useritem' : 'teacheritem'}`} >
+            <ReactMakrdown
+              children={displayCorrection && showCorrection ? correction : message.content}
+              remarkPlugins={[gfm]} />
+          </ChatItem>
+        )
+      })}
+    </div>
+  );
 }

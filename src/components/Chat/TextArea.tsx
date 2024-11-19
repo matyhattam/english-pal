@@ -1,5 +1,6 @@
 import { FormEvent, useState, useContext } from 'react';
 import { IoArrowUpCircleOutline } from "react-icons/io5";
+import { ScaleLoader } from 'react-spinners';
 import { sessionContext } from '../../App';
 import { useChatGpt, useGetUser, useAddMessage } from '../../hooks/hooks';
 import './Chat.css'
@@ -15,7 +16,7 @@ interface TextareaProps {
   textAreaClassName?: string;
 }
 
-export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages, setIsLoading }: TextareaProps) {
+export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages, isLoading, setIsLoading }: TextareaProps) {
   const [userMessage, setUserMessage] = useState<string>('');
   const session = useContext(sessionContext);
 
@@ -35,11 +36,11 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
     e.preventDefault();
 
     setUserMessage('');
-    setMessages(messages => [...messages, { source: 'user', content: userMessage }]);
+    setMessages(messages => [...messages, { id: `${crypto.randomUUID()}`, source: 'user', content: userMessage }]);
 
     setIsLoading(true);
     const answer = await useChatGpt(userMessage, "you are an english teacher");
-    setMessages(messages => [...messages, { source: 'teacher', content: answer }]);
+    setMessages(messages => [...messages, { id: `${crypto.randomUUID()}`, source: 'teacher', content: answer }]);
     setIsLoading(false);
 
     if (currentConv !== null) {
@@ -66,12 +67,12 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
         className={formClassName}
         onSubmit={handleSubmit}>
         <textarea
+          disabled={isLoading}
           className={textAreaClassName}
-          placeholder='Message English Pal'
+          placeholder={isLoading ? 'Let me think...' : "Let's talk!"}
           value={userMessage}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        >
+          onKeyDown={handleKeyDown} >
         </textarea>
         <button
           type="submit"
@@ -81,12 +82,12 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
             cursor: 'pointer',
             padding: 0
           }}>
-          <IoArrowUpCircleOutline
-            style={{
-              color: "hsl(25 5.3% 44.7%)",
-              fontSize: '3em'
-            }}
-          />
+          {isLoading ? <ScaleLoader color="hsl(25 5.3% 44.7%)" /> :
+            <IoArrowUpCircleOutline
+              style={{
+                color: "hsl(25 5.3% 44.7%)",
+                fontSize: '3em'
+              }} />}
         </button>
       </form>
     </div>
