@@ -53,7 +53,7 @@ export function Textarea({ formClassName, textAreaClassName, setConversations, c
         user_id: await useGetUser(session),
       }).select();
 
-      setCurrentConv(data);
+      setCurrentConv(data[0]);
       setConversations(conversations => [data[0], ...conversations]);
 
       await useAddMessage(data[0].id, 'user', userMessage);
