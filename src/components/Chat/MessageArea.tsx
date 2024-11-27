@@ -38,7 +38,7 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
       setSelectedMessageId(message.id)
 
       const correction = await useChatGpt(message.content,
-        "you are an english teacher, correct my sentenance with good and simple english related to the topic of the current discussion");
+        "you are an english teacher, correct my sentance with good and simple english related to the current topic, be concise but you must use Rich Text Formating to emphasize errors visualy");
       setIsCorrecting(false);
       setCorrection({ id: message.id, content: correction });
     } else {
@@ -52,7 +52,7 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
       if (isCurrentMessage && isCorrecting) {
         return (
           <div
-            className={className} >
+            className={className}>
             <ScaleLoader color="hsl(25 5.3% 44.7%)" />
           </div>
         )
