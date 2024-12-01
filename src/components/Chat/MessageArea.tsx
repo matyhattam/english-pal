@@ -2,25 +2,31 @@ import { useRef, useEffect, useState, ReactNode } from 'react';
 import ReactMakrdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import { ScaleLoader } from 'react-spinners';
-import { Messages } from '../../App'
+import { Message, Messages, Conversation } from '../../App'
 import { useChatGpt } from '../../hooks/hooks';
 import './Chat.css'
 
-interface MessagesAreaProps {
+type MessagesAreaProps = {
   className?: string;
-  messages: Messages[];
-
+  currentConv: Conversation;
+  messages: Messages;
+  setMessages: React.Dispatch<React.SetStateAction<Messages>>;
 }
 
-interface ChatItem {
+type ChatItem = {
   className?: string;
   children?: ReactNode;
-  message: Messages;
+  message: Message;
+}
+
+type Correction = {
+  id: string;
+  content: string;
 }
 
 export function MessageArea({ className, messages }: MessagesAreaProps) {
   const scrollRef = useRef(null);
-  const [correction, setCorrection] = useState([]);
+  const [correction, setCorrection] = useState<Correction>({ id: '', content: '' });
   const [showCorrection, setShowCorrection] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [isCorrecting, setIsCorrecting] = useState<boolean>(false);
@@ -31,7 +37,7 @@ export function MessageArea({ className, messages }: MessagesAreaProps) {
     }
   }, [messages]);
 
-  async function clickShowCorrection(message) {
+  async function clickShowCorrection(message: Message) {
     if (message.id !== correction.id) {
       setIsCorrecting(true);
       setShowCorrection(!showCorrection)

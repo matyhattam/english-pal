@@ -1,7 +1,7 @@
 import { FormEvent, useState, useContext } from 'react';
 import { IoArrowUpCircleOutline } from "react-icons/io5";
 import { ScaleLoader } from 'react-spinners';
-import { sessionContext } from '../../App';
+import { sessionContext, Messages, Conversation, Conversations } from '../../App';
 import { useChatGpt, useGetUser, useAddMessage } from '../../hooks/hooks';
 import './Chat.css'
 
@@ -14,6 +14,12 @@ const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
 interface TextareaProps {
   formClassName?: string;
   textAreaClassName?: string;
+  setConversations: React.Dispatch<React.SetStateAction<Conversations>>;
+  currentConv: Conversation;
+  setCurrentConv: React.Dispatch<React.SetStateAction<Conversation>>;
+  setMessages: React.Dispatch<React.SetStateAction<Messages>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function Textarea({ formClassName, textAreaClassName, setConversations, currentConv, setCurrentConv, setMessages, isLoading, setIsLoading }: TextareaProps) {

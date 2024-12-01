@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Conversations, Messages } from '../../App';
+import { Conversations, Messages, Conversation } from '../../App';
 import './SideBar.css'
 import { sessionContext } from '../../App';
 import { useGetUser } from '../../hooks/hooks';
@@ -11,9 +11,9 @@ const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
 
 interface SideBarProps {
   className?: string;
-  conversations: Conversations[];
-  currentConv: Conversations[];
-  setCurrentConv: React.Dispatch<React.SetStateAction<Conversations>>;
+  conversations: Conversations;
+  currentConv: Conversation;
+  setCurrentConv: React.Dispatch<React.SetStateAction<Conversation>>;
   setMessages: React.Dispatch<React.SetStateAction<Messages>>;
 }
 
@@ -21,7 +21,7 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
   const session = useContext(sessionContext);
   const [search, setSearch] = useState('');
 
-  async function getMessages(conversation: Conversations) {
+  async function getMessages(conversation: Conversation) {
     setCurrentConv(conversation);
     setMessages([]);
 
@@ -65,7 +65,7 @@ export function SideBar({ className, conversations, currentConv, setCurrentConv,
         />
       </div>
       <div className='sidebarlist'>
-        {conversations.filter((item: Conversations) => item.name.toLowerCase().includes(search.toLowerCase()))
+        {conversations.filter((item: Conversation) => item.name.toLowerCase().includes(search.toLowerCase()))
           .map(conversation =>
             <div key={conversation.id}
               className={currentConv ? currentConv.id === conversation.id ? 'sidebaritem selected' : 'sidebaritem' : 'sidebaritem'}

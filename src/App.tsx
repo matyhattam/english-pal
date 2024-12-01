@@ -9,30 +9,30 @@ const VITE_SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(VITE_SUPABASE_PROJECT_URL, VITE_SUPABASE_API_KEY);
 export const sessionContext = createContext(null);
 
-export interface Messages {
+export type Message = {
   id: string;
   created_at: Date;
   source: string;
   content: string;
 }
-export interface Conversations {
+
+export type Messages = Message[] | null
+
+export type Conversation = {
   id: string;
   created_at: Date;
   name: string;
-}
+} | null
 
-export interface ShowSideBar {
-  display: boolean;
-}
+export type Conversations = Conversation[] | null;
 
-export interface CurrentConv {
-  conversation: Conversations;
-}
+export type CurrentConv = Conversation | null
+
 
 function App() {
   const [showSideBar, setShowSideBar] = useState<boolean>(true)
-  const [conversations, setConversations] = useState([]);
-  const [currentConv, setCurrentConv] = useState(null);
+  const [conversations, setConversations] = useState<Conversations>([]);
+  const [currentConv, setCurrentConv] = useState<CurrentConv>(null);
   const [messages, setMessages] = useState<Messages>([]);
   const [session, setSession] = useState(null);
   const navigate = useNavigate();

@@ -2,12 +2,19 @@ import { ReactNode, useState } from 'react';
 import { FiSidebar, FiPlusSquare } from "react-icons/fi";
 import { Textarea } from './TextArea';
 import { MessageArea } from './MessageArea'
+import { Conversations, Messages, Conversation } from '../../App';
 import './Chat.css'
 
 interface ChatProps {
   className?: string;
   toggleSideBar: () => void;
+  setConversations: React.Dispatch<React.SetStateAction<Conversations>>;
+  currentConv: Conversation;
+  setCurrentConv: React.Dispatch<React.SetStateAction<Conversation>>;
+  messages: Messages;
+  setMessages: React.Dispatch<React.SetStateAction<Messages>>;
 }
+
 interface ChatHeaderProps {
   children: ReactNode;
   className?: string;
